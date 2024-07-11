@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { act, render, screen } from '@testing-library/react';
-import '@testing-library/dom';
+import '@testing-library/react';
 import * as userEvent from '@testing-library/user-event';
 import CreateForm from './CreateForm';
 
@@ -17,6 +17,8 @@ beforeEach(() => {
     mockHandler = jest.fn();
 });
 
+/* eslint-disable testing-library/no-container */
+/* eslint-disable testing-library/no-node-access */
 test('addblog function is called with correct data when submit button is clicked', async () => {
     const { container } = render(<CreateForm addBlog={mockHandler}/>);
 

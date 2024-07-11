@@ -24,7 +24,7 @@ app.use(tokenExtractor);
 app.use('/api/login', loginRouter);
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', userRouter);
-app.use(express.static('frontend/build'))
+app.use(express.static('frontend/build'));
 
 if(process.env.NODE_ENV === 'test') {
     const testingRouter = require('./controllers/testing');

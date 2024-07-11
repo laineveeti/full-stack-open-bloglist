@@ -21,8 +21,8 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: '20'
-            - run: npm install
-            - run: npm run eslint
+            - run: npm install && cd frontend && npm install
+            - run: npm run eslint && cd frontend && npm run eslint
             - run: npm run build
             - run: npm run test
             - name: e2e tests
