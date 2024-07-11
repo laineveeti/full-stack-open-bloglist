@@ -64,4 +64,4 @@ const remove = async (id) => {
     }
 };
 
-export default { getAll, setToken, emptyToken, createNew, like, remove };
+export const blogService = { getAll, setToken, emptyToken, createNew, like, remove };
