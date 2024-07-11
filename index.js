@@ -5,6 +5,9 @@ const app = require('./app');
 
 const server = http.createServer(app);
 
-server.listen(config.PORT, () => {
+const PORT = config.PORT || 3001;
+
+server.listen(PORT, () => {
     logger.info(`Server running on port ${config.PORT}`);
+    logger.info(`Node env: ${config.ENV}`);
 });
