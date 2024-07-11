@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Blog from './components/Blog';
-import blogService from './services/blogs';
+import { blogService } from './services/blogs';
 import CreateForm from './components/CreateForm';
 import LoginForm from './components/LoginForm';
 import login from './services/login';

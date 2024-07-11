@@ -1,5 +1,5 @@
 import axios from 'axios';
-import serviceUtils from './utils';
+import { handleAxiosError } from './utils';
 
 let token = '';
 const setToken = (userToken) => {
@@ -16,7 +16,7 @@ const getAll = async () => {
         const response = await axios.get(baseUrl);
         return response.data;
     } catch (exception) {
-        serviceUtils.handleAxiosError(exception);
+        handleAxiosError(exception);
     }
 };
 
@@ -28,7 +28,7 @@ const createNew = async (data) => {
         const response = await axios.post(baseUrl, data, config);
         return response.data;
     } catch (exception) {
-        serviceUtils.handleAxiosError(exception);
+        handleAxiosError(exception);
     }
 };
 
@@ -48,7 +48,7 @@ const like = async (id) => {
         const updatedBlog = await update(id, blog);
         return updatedBlog;
     } catch (exception) {
-        serviceUtils.handleAxiosError(exception);
+        handleAxiosError(exception);
     }
 };
 
@@ -60,7 +60,7 @@ const remove = async (id) => {
         const response = await axios.delete(`${baseUrl}/${id}`, config);
         return response.data;
     } catch (exception) {
-        serviceUtils.handleAxiosError(exception);
+        handleAxiosError(exception);
     }
 };
 
