@@ -6,11 +6,13 @@ const app = express();
 const loginRouter = require('./controllers/login');
 const blogsRouter = require('./controllers/blogs');
 const userRouter = require('./controllers/users');
+const testingRouter = require('./controllers/testing');
 const { tokenExtractor, errorHandler } = require('./utils/middleware');
 const config = require('./utils/config');
 const logger = require('./utils/logger');
 
-mongoose.connect(config.MONGODB_URI)
+mongoose
+    .connect(config.MONGODB_URI)
     .then(() => {
         logger.info('connected to MongoDB');
     })
@@ -26,8 +28,7 @@ app.use('/api/blogs', blogsRouter);
 app.use('/api/users', userRouter);
 app.use(express.static('frontend/build'));
 
-if(process.env.NODE_ENV === 'test') {
-    const testingRouter = require('./controllers/testing');
+if (config.ENV === 'testing') {
     app.use('/api/testing', testingRouter);
 }
 

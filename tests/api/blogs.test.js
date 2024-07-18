@@ -1,43 +1,21 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 const app = require('../../app');
 const supertest = require('supertest');
+const { initialBlogs, blogsInDb, invalidId } = require('./test_helper');
+
 const api = supertest(app);
-const Blog = require('../../models/blog');
-const User = require('../../models/user');
-const { initialBlogs, initialUsers, blogsInDb, invalidId } = require('./test_helper');
 
 const getToken = async () => {
-    const token = (await api
-        .post('/api/login')
-        .send({ username: 'user1', password: 'salasana' }))
-        .body.token;
+    const token = (
+        await api
+            .post('/api/login')
+            .send({ username: 'user1', password: 'salasana' })
+    ).body.token;
     return token;
 };
 
 beforeEach(async () => {
-    await Blog.deleteMany({});
-    await User.deleteMany({});
-
-    await Promise.all(initialUsers.map(async user => {
-        const newUser = new User({
-            username: user.username,
-            name: user.name,
-            password: await bcrypt.hash(user.password, 10)
-        });
-        return await newUser.save();
-    }));
-
-    const someUser = await User.findOne({ username: 'user1' });
-
-    const savedBlogs = await Promise.all(initialBlogs.map(blog => {
-        const newBlog = Blog(blog);
-        newBlog.user = someUser._id;
-        return newBlog.save();
-    }));
-
-    someUser.blogs = savedBlogs.map(blog => blog._id);
-    await someUser.save();
+    await api.post('/api/testing/reset');
 });
 
 describe('GET api/blogs', () => {
@@ -69,13 +47,13 @@ describe('POST api/blogs', () => {
         title: 'uusiblogi',
         author: 'kirjoittaja',
         url: 'osoite',
-        likes: 1
+        likes: 1,
     };
 
     test('response has status 400 when title or url is missing', async () => {
         const token = await getToken();
 
-        const blogWithMissingProps = { ... newBlog };
+        const blogWithMissingProps = { ...newBlog };
         delete blogWithMissingProps.title, blogWithMissingProps.url;
 
         await api
@@ -98,15 +76,21 @@ describe('POST api/blogs', () => {
 
     test('saves blog with user property', async () => {
         const token = await getToken();
-        const response = await api.post('/api/blogs').set('authorization', `Bearer ${token}`).send(newBlog);
+        const response = await api
+            .post('/api/blogs')
+            .set('authorization', `Bearer ${token}`)
+            .send(newBlog);
         expect(response.body.user).toBeDefined();
     });
 
     test('gives property "likes" a default value of 0', async () => {
         const token = await getToken();
-        const blogWith0Likes = { ... newBlog };
+        const blogWith0Likes = { ...newBlog };
         delete blogWith0Likes.likes;
-        const response = await api.post('/api/blogs').set('authorization', `Bearer ${token}`).send(blogWith0Likes);
+        const response = await api
+            .post('/api/blogs')
+            .set('authorization', `Bearer ${token}`)
+            .send(blogWith0Likes);
         expect(response.body.likes).toBe(0);
     });
 });
@@ -143,16 +127,15 @@ describe('DELETE api/blogs/id', () => {
 
     test('returns status code 401 on missing token', async () => {
         const toDelete = (await blogsInDb())[0].id;
-        await api
-            .delete(`/api/blogs/${toDelete}`)
-            .expect(401);
+        await api.delete(`/api/blogs/${toDelete}`).expect(401);
     });
 
     test('returns status code 401 if user is not authorized to delete the blog', async () => {
-        const wrongUserToken = (await api
-            .post('/')
-            .send({ username: 'user2', password: 'salasana' }))
-            .body.token;
+        const wrongUserToken = (
+            await api
+                .post('/')
+                .send({ username: 'user2', password: 'salasana' })
+        ).body.token;
         const toDelete = (await blogsInDb())[0].id;
         await api
             .delete(`/api/blogs/${toDelete}`)
@@ -170,12 +153,9 @@ describe('PUT api/blogs/id', () => {
         expect(response.body.likes).toBe(10);
     });
 
-    test('returns 200 on succesfull update', async () => {
+    test('returns 200 on successful update', async () => {
         const toUpdate = (await blogsInDb())[0].id;
-        await api
-            .put(`/api/blogs/${toUpdate}`)
-            .send({ likes: 10 })
-            .expect(200);
+        await api.put(`/api/blogs/${toUpdate}`).send({ likes: 10 }).expect(200);
     });
 });
 
