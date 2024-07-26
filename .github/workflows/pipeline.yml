@@ -35,7 +35,7 @@ jobs:
               uses: cypress-io/github-action@v5
               with:
                   command: cd frontend && npm run cypress
-                  start: npm run start
+                  start: npm run start:test
                   wait-on: http://localhost:5000
             - name: deployment
               if: ${{ github.event_name == 'push' }}
