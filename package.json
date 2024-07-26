@@ -10,7 +10,8 @@
         "render:deploy": "npm install && cd frontend && npm install && npm run build",
         "eslint": "eslint .",
         "test": "NODE_ENV=testing jest --verbose --runInBand --forceExit",
-        "start:test": "NODE_ENV=testing node index.js"
+        "start:test": "NODE_ENV=testing node index.js",
+        "test:e2e": "cd frontend && npm run cypress"
     },
     "author": "",
     "license": "ISC",
