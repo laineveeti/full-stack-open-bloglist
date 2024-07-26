@@ -34,9 +34,10 @@ jobs:
             - name: e2e tests
               uses: cypress-io/github-action@v5
               with:
-                  command: cd frontend && dotenvx run -- npm run cypress
+                  command: dotenvx run -- npm run cypress
                   start: dotenvx run -- npm run start:test
-                  wait-on: http://localhost:3003
+                  wait-on: "http://localhost:3003"
+                  working-directory: frontend
               env:
                 DOTENV_PRIVATE_KEY_CI: ${{ secrets.DOTENV_PRIVATE_KEY_CI }}
             - name: deployment
