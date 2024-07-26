@@ -11,6 +11,7 @@
         "eslint": "eslint .",
         "test": "NODE_ENV=testing jest --verbose --runInBand --forceExit",
         "start:test": "NODE_ENV=testing node index.js",
+        "start:e2e": "npm run start:test & cd frontend && npm run start",
         "test:e2e": "cd frontend && npm run cypress"
     },
     "author": "",

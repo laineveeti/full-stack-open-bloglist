@@ -35,7 +35,7 @@ jobs:
               uses: cypress-io/github-action@v5
               with:
                   command: npm run test:e2e
-                  start: dotenvx run -- npm run start:test
+                  start: dotenvx run -- npm run start:e2e
                   wait-on: "http://localhost:3003"
               env:
                 DOTENV_PRIVATE_KEY_CI: ${{ secrets.DOTENV_PRIVATE_KEY_CI }}
