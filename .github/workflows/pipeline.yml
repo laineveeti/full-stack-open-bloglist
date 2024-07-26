@@ -12,10 +12,10 @@ on:
 env:
     COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
     COMMIT: ${{ toJson(github.event.commits)[0] }}
-    SECRET: secrets.SECRET
-    MONGODB_URI: secrets.MONGODB_URI
-    TEST_MONGODB_URI: secrets.TEST_MONGODB_URI
-    DEV_MONGODB_URI: secrets.DEV_MONGODB_URI
+    SECRET: ${{ secrets.SECRET }}
+    MONGODB_URI: ${{ secrets.MONGODB_URI }}
+    TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+    DEV_MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
 
 jobs:
     simple_deployment_pipeline:
