@@ -21,12 +21,7 @@ const initialUsers = [
         username: 'user1',
         name: 'käyttäjä',
         password: 'salasana',
-    },
-    {
-        username: 'user2',
-        name: 'käyttäjä toinen',
-        password: 'salasana',
-    },
+    }
 ];
 
 const blogsInDb = async () => {
