@@ -34,9 +34,11 @@ jobs:
             - name: e2e tests
               uses: cypress-io/github-action@v5
               with:
-                  command: cd frontend && npm run cypress
-                  start: npm run start:test
-                  wait-on: http://localhost:5000
+                  command: cd frontend && dotenvx run -- npm run cypress
+                  start: dotenvx run -- npm run start:test
+                  wait-on: http://localhost:3003
+              env:
+                DOTENV_PRIVATE_KEY_CI: ${{ secrets.DOTENV_PRIVATE_KEY_CI }}
             - name: deployment
               if: ${{ github.event_name == 'push' }}
               run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
