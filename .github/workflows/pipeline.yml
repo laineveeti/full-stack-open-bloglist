@@ -12,10 +12,6 @@ on:
 env:
     COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
     COMMIT: ${{ toJson(github.event.commits)[0] }}
-    SECRET: ${{ secrets.SECRET }}
-    MONGODB_URI: ${{ secrets.MONGODB_URI }}
-    TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
-    DEV_MONGODB_URI: ${{ secrets.DEV_MONGODB_URI }}
 
 jobs:
     simple_deployment_pipeline:
@@ -28,15 +24,21 @@ jobs:
             - run: npm install && cd frontend && npm install
             - run: npm run eslint && cd frontend && npm run eslint
             - run: npm run build
-            - run: npm run test
+            - run: curl -sfS https://dotenvx.sh/install.sh | sh
+            - name: backend tests
+              run: dotenvx run -- npm run test
+              env:
+                DOTENV_PRIVATE_KEY_CI: ${{ secrets.DOTENV_PRIVATE_KEY_CI }}
             - name: frontend tests
               run: cd frontend && npm run test
             - name: e2e tests
               uses: cypress-io/github-action@v5
               with:
-                  command: cd frontend && npm run cypress
-                  start: npm run start
-                  wait-on: http://localhost:5000
+                  command: npm run test:e2e
+                  start: dotenvx run -- npm run start:e2e
+                  wait-on: "http://localhost:3003, http://localhost:3000"
+              env:
+                DOTENV_PRIVATE_KEY_CI: ${{ secrets.DOTENV_PRIVATE_KEY_CI }}
             - name: deployment
               if: ${{ github.event_name == 'push' }}
               run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}

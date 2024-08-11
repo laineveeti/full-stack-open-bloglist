@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 describe('Bloglist app', function() {
     beforeEach(function() {
-        cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`);
+        cy.request('POST', `${Cypress.env('BACKEND')}/testing/empty`);
         const user = {
             name: 'Testi Käyttäjä',
             username: 'testuser',
